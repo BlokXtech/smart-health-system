@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile - Health Management System</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Smart healthcare operations</p>
+        <h1>Profile</h1>
+      </div>
+      <div class="topbar-right">
+        <a class="profile-link" href="/index.html">Back to home</a>
+        <div class="live-clock" id="liveClock">--:--:--</div>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <section class="panel">
+        <h2>Edit your information</h2>
+        <p class="lead">You can update your name, email, role, street address, city, and contact number here. Your work ID stays locked for security.</p>
+        <form id="profilePageForm" class="stack-form">
+          <label for="profileWorkId">Work ID</label>
+          <input id="profileWorkId" placeholder="Work ID" readonly />
+          <label for="profileName">Full name</label>
+          <input id="profileName" placeholder="Full name" required />
+          <label for="profileEmail">Email</label>
+          <input id="profileEmail" type="email" placeholder="Email" required />
+          <label for="profileRole">Role</label>
+          <select id="profileRole">
+            <option value="receptionist">Receptionist</option>
+            <option value="doctor">Doctor</option>
+            <option value="dentist">Dentist</option>
+            <option value="nurse">Nurse</option>
+            <option value="admin">Admin</option>
+          </select>
+          <label for="profileStreetAddress">Street address</label>
+          <input id="profileStreetAddress" placeholder="Street address" />
+          <label for="profileCity">City</label>
+          <input id="profileCity" placeholder="City" />
+          <label for="profileContactNumber">Contact number</label>
+          <input id="profileContactNumber" type="tel" placeholder="Contact number" />
+          <button class="primary-btn full-width" type="submit">Save profile</button>
+          <button class="ghost-btn full-width" type="button" id="logoutBtn">Sign out</button>
+        </form>
+        <p id="profileStatus" class="status-message"></p>
+      </section>
+
+      <section class="panel">
+        <h2>Doctor tools</h2>
+        <p class="lead">These are the action cards available from your role dashboard.</p>
+        <div class="pill-row">
+          <button type="button" class="pill task-pill" data-task="Review patient charts">Review patient charts</button>
+          <button type="button" class="pill task-pill" data-task="Approve follow-up visits">Approve follow-up visits</button>
+          <button type="button" class="pill task-pill" data-task="Monitor treatment plans">Monitor treatment plans</button>
+        </div>
+        <p id="taskStatus" class="status-message"></p>
+      </section>
+    </main>
+
+    <footer class="page-footer">© Blok Industries</footer>
+
+    <script src="script.js"></script>
+    <script>
+      const profilePageForm = document.getElementById('profilePageForm');
+      const profileStatus = document.getElementById('profileStatus');
+      const profileWorkId = document.getElementById('profileWorkId');
+      const profileName = document.getElementById('profileName');
+      const profileEmail = document.getElementById('profileEmail');
+      const profileRole = document.getElementById('profileRole');
+      const profileStreetAddress = document.getElementById('profileStreetAddress');
+      const profileCity = document.getElementById('profileCity');
+      const profileContactNumber = document.getElementById('profileContactNumber');
+      const logoutBtn = document.getElementById('logoutBtn');
+
+      function setProfileStatus(message, isError = false) {
+        profileStatus.textContent = message;
+        profileStatus.style.color = isError ? '#fca5a5' : '#bffcf7';
+      }
+
+      function loadProfilePage() {
+        const user = JSON.parse(localStorage.getItem('healthUser') || 'null');
+        if (!user) {
+          window.location.href = '/';
+          return;
+        }
+
+        profileWorkId.value = user.workId || user.work_id || '';
+        profileName.value = user.name || '';
+        profileEmail.value = user.email || '';
+        profileRole.value = user.role || 'receptionist';
+        profileStreetAddress.value = user.streetAddress || user.street_address || '';
+        profileCity.value = user.city || '';
+        profileContactNumber.value = user.contactNumber || user.contact_number || '';
+      }
+
+      profilePageForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const user = JSON.parse(localStorage.getItem('healthUser') || 'null');
+        if (!user) return;
+
+        try {
+          const response = await fetch('/api/profile', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: user.id,
+              workId: user.workId || user.work_id,
+              name: profileName.value.trim(),
+              email: profileEmail.value.trim(),
+              role: profileRole.value,
+              streetAddress: profileStreetAddress.value.trim(),
+              city: profileCity.value.trim(),
+              contactNumber: profileContactNumber.value.trim(),
+            }),
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || 'Unable to update profile.');
+
+          const updated = { ...user, ...result.user };
+          localStorage.setItem('healthUser', JSON.stringify(updated));
+          setProfileStatus('Profile updated successfully.');
+        } catch (error) {
+          setProfileStatus(error.message, true);
+        }
+      });
+
+      logoutBtn.addEventListener('click', () => {
+        localStorage.removeItem('healthUser');
+        window.location.href = '/';
+      });
+
+      document.querySelectorAll('.task-pill').forEach((button) => {
+        button.addEventListener('click', () => {
+          document.getElementById('taskStatus').textContent = `Action ready: ${button.dataset.task}`;
+          document.getElementById('taskStatus').style.color = '#bffcf7';
+        });
+      });
+
+      loadProfilePage();
+    </script>
+  </body>
+</html>

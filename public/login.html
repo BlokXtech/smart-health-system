@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Health Management System</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="login-shell">
+      <section class="panel hero-grid">
+        <article class="hero-copy">
+          <p class="eyebrow">Health Management System</p>
+          <h1>Welcome to your staff portal</h1>
+          <p class="lead">Secure login first, then access your role-based dashboard for appointments, care coordination, and staff tools.</p>
+          <img class="hero-image" src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=900&q=80" alt="Medical staff at work" />
+        </article>
+
+        <article class="panel login-card">
+          <h2>Login</h2>
+          <p class="lead">Use your work ID and password to enter the portal.</p>
+
+          <form id="loginForm" class="stack-form">
+            <input id="loginWorkId" placeholder="Work ID" required />
+            <input id="loginPassword" type="password" placeholder="Password" required />
+            <button class="primary-btn full-width" type="submit">Sign in</button>
+          </form>
+
+          <p class="switch-link">Don’t have an account? <a href="#" id="showRegisterLink">Create one here</a></p>
+
+          <form id="registerForm" class="stack-form mt-10 register-box hidden">
+            <h3>Create account</h3>
+            <input id="registerName" placeholder="Full name" required />
+            <input id="registerEmail" type="email" placeholder="Email" required />
+            <input id="registerPassword" type="password" placeholder="Password" required />
+            <select id="registerRole">
+              <option value="receptionist">Receptionist</option>
+              <option value="doctor">Doctor</option>
+              <option value="dentist">Dentist</option>
+              <option value="nurse">Nurse</option>
+              <option value="admin">Admin</option>
+            </select>
+            <input id="registerStreetAddress" placeholder="Street address" />
+            <input id="registerCity" placeholder="City" />
+            <input id="registerContactNumber" type="tel" placeholder="Contact number" />
+            <button class="ghost-btn full-width" type="submit">Create account</button>
+            <small class="hint">Your work ID will be generated automatically after registration.</small>
+          </form>
+
+          <form id="recoveryForm" class="stack-form mt-10">
+            <h3>Forgot your password?</h3>
+            <input id="recoveryWorkId" placeholder="Work ID" required />
+            <button class="ghost-btn full-width" type="submit">Recover here</button>
+          </form>
+
+          <p id="statusMessage" class="status-message"></p>
+        </article>
+      </section>
+
+      <section class="panel footer-grid">
+        <article class="mini-card"><strong>Vacancies</strong><p>Receptionist, nurse, doctor, dentist, and support roles available now.</p></article>
+        <article class="mini-card"><strong>FAQ</strong><p>How to log in, reset your password, and update recovery details.</p></article>
+        <article class="mini-card"><strong>Support</strong><p>Contact your administrator for role setup and account help.</p></article>
+      </section>
+    </main>
+
+    <footer class="page-footer">© Blok Industries</footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

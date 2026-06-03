@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Health Management System</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Smart healthcare operations</p>
+        <h1>Health Management System</h1>
+      </div>
+      <div class="topbar-right">
+        <a class="profile-link" href="/profile.html" aria-label="Open profile page">
+          <span class="profile-avatar">P</span>
+        </a>
+        <div class="live-clock" id="liveClock">--:--:--</div>
+        <span id="welcomeLabel" class="welcome-label">Please sign in to continue</span>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <section id="authSection" class="panel hero-panel auth-hero">
+        <h2>Login page</h2>
+        <p>Use your system-issued work ID to log in, create a password, and set an email recovery option.</p>
+        <div class="pill-row">
+          <span class="pill">PostgreSQL ready</span>
+          <span class="pill">Live time</span>
+          <span class="pill">Analytics</span>
+        </div>
+      </section>
+
+      <section id="dashboardView" class="panel stat-grid hidden">
+        <article class="stat-card"><h3 id="patientsCount">0</h3><p>Registered patients</p></article>
+        <article class="stat-card"><h3 id="appointmentsCount">0</h3><p>Appointments</p></article>
+        <article class="stat-card"><h3 id="pendingCount">0</h3><p>Pending</p></article>
+        <article class="stat-card"><h3 id="completionRate">0%</h3><p>Completion rate</p></article>
+      </section>
+
+      <section id="rolePanel" class="panel hidden">
+        <div class="hero-grid">
+          <article>
+            <h2 id="roleTitle">Home page</h2>
+            <p id="roleSummary">Role-based workspace will appear here.</p>
+            <div id="roleTasks" class="pill-row"></div>
+            <p id="taskStatus" class="status-message"></p>
+          </article>
+          <img class="hero-image" src="https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=900&q=80" alt="Healthcare dashboard" />
+        </div>
+      </section>
+
+      <section id="sharedHubPanel" class="panel hidden">
+        <h2>Shared staff command center</h2>
+        <p class="lead">Every role keeps the same core tools: patient search, staff messaging, notifications, and access control.</p>
+        <div class="mini-grid">
+          <article class="mini-card"><strong>Patient search</strong><p>Quick lookup by name, DOB, or visit number across all departments.</p></article>
+          <article class="mini-card"><strong>Staff messaging</strong><p>Send handoffs, triage notes, and care updates between receptionist, nurse, doctor, and dentist teams.</p></article>
+          <article class="mini-card"><strong>Notifications</strong><p>Alerts for no-shows, delays, abnormal vitals, missing forms, and follow-up reminders.</p></article>
+          <article class="mini-card"><strong>Access control</strong><p>Role-based permissions keep intake, treatment, and clinical decision workflows scoped to the correct team.</p></article>
+        </div>
+      </section>
+
+      <section id="receptionistDashboard" class="panel hidden">
+        <h2>Receptionist intake & scheduling</h2>
+        <p class="lead">Focus on check-ins, registration, and fast scheduling actions for today’s visits.</p>
+        <div class="mini-grid">
+          <article class="mini-card"><strong>Today’s appointments</strong><ul class="list"><li>09:30 Ava Johnson — confirm check-in</li><li>11:15 Liam Chen — no-show alert</li><li>13:00 Sofia Patel — delay note</li></ul></article>
+          <article class="mini-card"><strong>Check-in actions</strong><button class="ghost-btn full-width" type="button">Mark patient arrived</button><button class="ghost-btn full-width mt-10" type="button">Send reminder</button></article>
+          <article class="mini-card"><strong>Patient registration</strong><input placeholder="Full name" /><input placeholder="Insurance / ID" /><button class="primary-btn full-width mt-10" type="button">Register patient</button></article>
+          <article class="mini-card"><strong>Search patient database</strong><input placeholder="Search by name or visit ID" /><ul class="list"><li>Ava Johnson · Visit 4821</li><li>Liam Chen · Visit 4822</li></ul></article>
+        </div>
+        <article class="mini-card mt-10"><strong>Alert board</strong><p>No-shows: 1 · Delays: 1 · Missing information: 2</p></article>
+      </section>
+
+      <section id="nurseDashboard" class="panel hidden">
+        <h2>Nurse clinical support</h2>
+        <p class="lead">Track assigned patients, vitals, medication tasks, and allergy watchlists.</p>
+        <div class="mini-grid">
+          <article class="mini-card"><strong>Assigned patients</strong><ul class="list"><li>Emma Reed — BP 128/82, heart rate 78</li><li>Noah Grant — glucose trend rising</li></ul></article>
+          <article class="mini-card"><strong>Vitals entry & trends</strong><input placeholder="Temp / BP / O2" /><button class="primary-btn full-width mt-10" type="button">Record vitals</button></article>
+          <article class="mini-card"><strong>Medication & treatment checklist</strong><ul class="list"><li>☐ Administer morning meds</li><li>☐ Recheck wound dressing</li><li>☐ Update discharge notes</li></ul></article>
+          <article class="mini-card"><strong>Alerts</strong><p>Abnormal readings: 1 · Allergies flagged: Penicillin</p></article>
+        </div>
+      </section>
+
+      <section id="doctorDashboard" class="panel hidden">
+        <h2>Doctor clinical decision hub</h2>
+        <p class="lead">Use quick search, records, diagnostics, SOAP notes, and prescribing tools in one place.</p>
+        <div class="mini-grid">
+          <article class="mini-card"><strong>Quick patient search</strong><input placeholder="Search patient chart" /><ul class="list"><li>Patient: Olivia Shaw</li><li>Risk indicator: elevated LDL</li></ul></article>
+          <article class="mini-card"><strong>Medical records</strong><p>History, conditions, medications, and follow-up plan summarized for rapid review.</p></article>
+          <article class="mini-card"><strong>Diagnostic results</strong><p>Latest labs: CBC normal · CRP 6.8 · ECG sinus rhythm.</p></article>
+          <article class="mini-card"><strong>Clinical notes</strong><p>SOAP note: Subjective – fatigue; Objective – mild tachycardia; Assessment – monitor; Plan – repeat labs.</p></article>
+        </div>
+        <div class="mini-grid mt-10">
+          <article class="mini-card"><strong>Doctor workflow links</strong>
+            <a class="ghost-btn full-width" href="/public/doctor-review-charts.html">Review patient charts</a>
+            <a class="ghost-btn full-width mt-10" href="/public/doctor-follow-up-visits.html">Approve follow-up visits</a>
+            <a class="ghost-btn full-width mt-10" href="/public/doctor-monitor-lab-trends.html">Monitor lab trends</a>
+          </article>
+          <article class="mini-card"><strong>Insight panel</strong><p>Lab trends: stable over 3 visits · Risk indicators: 2 flagged items requiring review.</p></article>
+        </div>
+      </section>
+
+      <section id="dentistDashboard" class="panel hidden">
+        <h2>Dentist procedure-driven workspace</h2>
+        <p class="lead">Visual, tooth-specific planning with imaging, treatment history, and follow-up reminders.</p>
+        <div class="mini-grid">
+          <article class="mini-card"><strong>Interactive dental chart</strong><p>Tooth 18: crown prep pending · Tooth 27: cavity filled.</p></article>
+          <article class="mini-card"><strong>Imaging tools</strong><button class="ghost-btn full-width" type="button">View X-rays</button><button class="ghost-btn full-width mt-10" type="button">Compare imaging</button></article>
+          <article class="mini-card"><strong>Treatment planning</strong><ul class="list"><li>Tooth 21 — root canal follow-up</li><li>Tooth 32 — whitening consultation</li></ul></article>
+          <article class="mini-card"><strong>Procedure history & alerts</strong><p>Last procedure: composite filling · Follow-up alert due in 5 days.</p></article>
+        </div>
+      </section>
+
+      <section id="adminDirectoryPanel" class="panel hidden">
+        <h2>Administrator staff directory</h2>
+        <p class="lead">Admin users can view the stored street address, city, and contact details for staff members.</p>
+        <ul id="adminDirectoryList" class="list"></ul>
+      </section>
+
+      <section id="appointmentPanel" class="panel form-panel hidden">
+        <h2>Book appointment</h2>
+        <form id="appointmentForm" class="stack-form">
+          <input id="patientName" placeholder="Patient name" required />
+          <input id="doctorName" placeholder="Doctor" required />
+          <input id="appointmentDate" type="date" required />
+          <input id="appointmentTime" type="time" required />
+          <button class="primary-btn full-width" type="submit">Add appointment</button>
+        </form>
+      </section>
+
+      <section id="appointmentListPanel" class="panel list-panel hidden">
+        <h2>Upcoming appointments</h2>
+        <ul id="appointmentList" class="list"></ul>
+      </section>
+
+    </main>
+
+    <section class="panel footer-grid">
+      <article class="mini-card"><strong>Vacancies</strong><p>Open roles for nursing, reception, doctors, dentistry, and admin staff.</p></article>
+      <article class="mini-card"><strong>FAQ</strong><p>Support for recovery, work ID changes, and profile updates.</p></article>
+      <article class="mini-card"><strong>Support</strong><p>Contact the administrator for role setup and account help.</p></article>
+    </section>
+
+    <footer class="page-footer">© Blok Industries</footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

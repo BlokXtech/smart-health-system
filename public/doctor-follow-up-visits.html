@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Approve Follow-Up Visits</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Doctor workflow</p>
+        <h1>Approve Follow-Up Visits</h1>
+      </div>
+      <div class="topbar-right">
+        <a class="profile-link" href="/index.html">Back to dashboard</a>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <section class="panel">
+        <h2>Pending follow-up review</h2>
+        <p class="lead">Approve or adjust follow-up appointments based on patient condition and recent testing.</p>
+        <div class="mini-grid">
+          <article class="mini-card"><strong>Patient</strong><p id="followUpPatient"></p></article>
+          <article class="mini-card"><strong>Reason</strong><p id="followUpReason"></p></article>
+          <article class="mini-card"><strong>Recommended action</strong><p id="followUpAction"></p></article>
+          <article class="mini-card"><strong>Staff note</strong><p id="followUpNote"></p></article>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Approval tools</h2>
+        <button class="primary-btn full-width" type="button">Approve follow-up visit</button>
+        <button class="ghost-btn full-width mt-10" type="button">Modify schedule</button>
+        <button class="ghost-btn full-width mt-10" type="button">Send patient instructions</button>
+      </section>
+    </main>
+
+    <footer class="page-footer">© Blok Industries</footer>
+
+    <script>
+      const followUpPatient = document.getElementById('followUpPatient');
+      const followUpReason = document.getElementById('followUpReason');
+      const followUpAction = document.getElementById('followUpAction');
+      const followUpNote = document.getElementById('followUpNote');
+
+      async function loadLiveFollowUps() {
+        try {
+          const response = await fetch('/api/appointments');
+          const appointments = await response.json();
+          const pending = appointments.find((item) => item.status === 'Pending') || appointments[0] || {};
+
+          followUpPatient.textContent = `${pending.patient || 'No patient available'} · ${pending.date || 'No date available'} · ${pending.time || 'No time available'}`;
+          followUpReason.textContent = pending.doctor ? `Assigned clinician: ${pending.doctor}` : 'No clinician assigned yet in the live record.';
+          followUpAction.textContent = pending.status === 'Pending' ? `Approve follow-up visit for ${pending.patient || 'the current patient'} and review live results.` : `Visit status is ${pending.status || 'Unknown'} in the live system.`;
+          followUpNote.textContent = `${appointments.length} appointment record(s) are currently available in the live system.`;
+        } catch (error) {
+          followUpPatient.textContent = '';
+          followUpReason.textContent = '';
+          followUpAction.textContent = '';
+          followUpNote.textContent = '';
+        }
+      }
+
+      loadLiveFollowUps();
+    </script>
+  </body>
+</html>

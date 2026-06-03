@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monitor Lab Trends</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Doctor workflow</p>
+        <h1>Monitor Lab Trends</h1>
+      </div>
+      <div class="topbar-right">
+        <a class="profile-link" href="/index.html">Back to dashboard</a>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <section class="panel">
+        <h2>Latest lab trend summary</h2>
+        <p class="lead">Track key indicators across visits to spot changes, stability, and escalation needs.</p>
+        <div class="mini-grid">
+          <article class="mini-card"><strong>CBC</strong><p id="labCbc"></p></article>
+          <article class="mini-card"><strong>Inflammatory markers</strong><p id="labInflammation"></p></article>
+          <article class="mini-card"><strong>Lipid panel</strong><p id="labLipid"></p></article>
+          <article class="mini-card"><strong>Risk indicators</strong><p id="labRisk"></p></article>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Trend actions</h2>
+        <button class="primary-btn full-width" type="button">View trend chart</button>
+        <button class="ghost-btn full-width mt-10" type="button">Compare with previous visits</button>
+        <button class="ghost-btn full-width mt-10" type="button">Update care plan</button>
+      </section>
+    </main>
+
+    <footer class="page-footer">© Blok Industries</footer>
+
+    <script>
+      const labCbc = document.getElementById('labCbc');
+      const labInflammation = document.getElementById('labInflammation');
+      const labLipid = document.getElementById('labLipid');
+      const labRisk = document.getElementById('labRisk');
+
+      async function loadLiveLabCards() {
+        try {
+          const [analyticsResponse, appointmentsResponse] = await Promise.all([
+            fetch('/api/analytics'),
+            fetch('/api/appointments'),
+          ]);
+          const analytics = await analyticsResponse.json();
+          const appointments = await appointmentsResponse.json();
+          const pendingCount = appointments.filter((item) => item.status === 'Pending').length;
+
+          labCbc.textContent = `Patients tracked: ${analytics.patients || 0} · Appointments: ${analytics.appointments || 0}`;
+          labInflammation.textContent = `Pending reviews: ${pendingCount} · Completion rate: ${analytics.completionRate || 0}%`;
+          labLipid.textContent = `Upcoming schedule items: ${appointments.length}`;
+          labRisk.textContent = pendingCount > 0 ? `${pendingCount} flagged item(s) need clinician review.` : 'No flagged clinical items are currently pending in the live record.';
+        } catch (error) {
+          labCbc.textContent = '';
+          labInflammation.textContent = '';
+          labLipid.textContent = '';
+          labRisk.textContent = '';
+        }
+      }
+
+      loadLiveLabCards();
+    </script>
+  </body>
+</html>

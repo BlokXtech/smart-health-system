@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Review Patient Charts</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Doctor workflow</p>
+        <h1>Review Patient Charts</h1>
+      </div>
+      <div class="topbar-right">
+        <a class="profile-link" href="/index.html">Back to dashboard</a>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <section class="panel">
+        <h2>Patient overview</h2>
+        <p class="lead">Review recent history, current medications, allergies, and the latest care notes before the visit.</p>
+        <div class="mini-grid">
+          <article class="mini-card"><strong>Current patient</strong><p id="livePatientCard"></p></article>
+          <article class="mini-card"><strong>History</strong><p id="liveHistoryCard"></p></article>
+          <article class="mini-card"><strong>Medications</strong><p id="liveMedicationCard"></p></article>
+          <article class="mini-card"><strong>Allergies</strong><p id="liveAllergyCard"></p></article>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Clinical notes</h2>
+        <p class="lead">Use this section for chart review, summarizing symptoms, and documenting any urgent concerns.</p>
+        <article class="mini-card">
+          <strong>SOAP note</strong>
+          <p id="soapNote"></p>
+        </article>
+      </section>
+
+      <section class="panel">
+        <h2>Visit actions</h2>
+        <button class="primary-btn full-width" type="button">Open full chart</button>
+        <button class="ghost-btn full-width mt-10" type="button">Flag for follow-up</button>
+        <button class="ghost-btn full-width mt-10" type="button">Send care summary</button>
+      </section>
+    </main>
+
+    <footer class="page-footer">© Blok Industries</footer>
+
+    <script>
+      const user = JSON.parse(localStorage.getItem('healthUser') || '{}');
+      const livePatientCard = document.getElementById('livePatientCard');
+      const liveHistoryCard = document.getElementById('liveHistoryCard');
+      const liveMedicationCard = document.getElementById('liveMedicationCard');
+      const liveAllergyCard = document.getElementById('liveAllergyCard');
+      const soapNote = document.getElementById('soapNote');
+
+      async function loadLiveDoctorCards() {
+        try {
+          const appointmentsResponse = await fetch('/api/appointments');
+          const analyticsResponse = await fetch('/api/analytics');
+          const appointments = await appointmentsResponse.json();
+          const analytics = await analyticsResponse.json();
+          const latest = appointments[0] || {};
+          const pendingCount = appointments.filter((item) => item.status === 'Pending').length;
+
+          livePatientCard.textContent = `${latest.patient || 'No patient available'} · ${latest.date || 'No date available'} · ${latest.status || 'Pending'}`;
+          liveHistoryCard.textContent = `${latest.doctor || 'No doctor assigned'} · ${analytics.appointments || appointments.length} appointment records currently tracked`;
+          liveMedicationCard.textContent = `Signed in as ${user.role || 'doctor'} · ${pendingCount} pending review item(s) · ${analytics.completionRate || 0}% completion rate`;
+          liveAllergyCard.textContent = `${analytics.patients || 0} patient records available · ${pendingCount > 0 ? 'Follow-up items require chart review.' : 'No follow-up items are currently pending.'}`;
+          soapNote.textContent = `Subjective: latest live appointment for ${latest.patient || 'the current patient'} on ${latest.date || 'the latest recorded date'}. Objective: ${pendingCount} pending review item(s) and ${analytics.completionRate || 0}% completion rate. Assessment: live system state is ${latest.status || 'Pending'}. Plan: review the current live appointment record and update as needed.`;
+        } catch (error) {
+          livePatientCard.textContent = '';
+          liveHistoryCard.textContent = '';
+          liveMedicationCard.textContent = '';
+          liveAllergyCard.textContent = '';
+          soapNote.textContent = '';
+        }
+      }
+
+      loadLiveDoctorCards();
+    </script>
+  </body>
+</html>
